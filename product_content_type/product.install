@@ -1,0 +1,142 @@
+<?php
+
+/**
+* Implements hook_install() for create the content type
+*/
+
+function product_install(){
+
+//make t-function available
+    $t = get_t();
+
+//define the content type   
+    
+    $content_type = array(
+        'type'              => 'product',
+        'name'              => $t('Product'),
+        'title_label'       => $t('Product title'),
+        'description'       => $t('Product description'),
+        'base'              => 'node_content',
+        'custom'            => true,
+    );
+
+//create and save node_type as default node
+
+    $node_type = node_type_set_defaults($content_type);
+    node_type_save($node_type);
+
+//create fields pattern for the content_type and loop for create the all fields one by one
+    $fields = array(
+
+        'product_name'=> array(
+            'field_product_name'        => 'product_name',
+            'type'                      => 'text',
+            'cardinality'               => 1
+            ),
+
+        'product_description' =>array(
+            'field_product_description' => 'product_description',
+            'type'                      => 'text_long',
+            'cardinality'               => 1
+            ),
+
+        'product_price' => array(
+            'field_product_price'       => 'product_price',
+            'type'                      => 'float',
+            'cardinality'               => 1
+            ),
+
+        'product_quantity' => array(
+            'field_product_price'       => 'product_quantity',
+            'type'                      => 'float',
+            'cardinality'               => 1
+            ),
+
+        'product_brand' => array(
+            'field_product_brand'       => 'product_brand',
+            'type'                      => 'text',
+            'cardinality'               => 1
+            ),
+    );
+
+    foreach ($fields as $field){
+        field_create_field($field);
+    }
+
+//attach created fields to the content_type as instances  (in a way like form fields)
+    $instances = array(
+
+        'product_name' => array(
+            'field_name' => 'product_name',
+            'label'      => $t('Product Name'),
+            'required'   => true,
+            'widget'     => array(
+                'type' => 'text_textfield'
+            ),
+        ), 
+
+        'product_description' => array(
+            'field_name' => 'product_description',
+            'label'      => $t('Product Description'),
+            'required'   => true,
+            'widget'     => array(
+                'type' => 'text_texarea'
+            ),
+        ), 
+
+        'product_price' => array(
+            'field_name' => 'product_price',
+            'label'      => $t('Product Price'),
+            'required'   => true,
+            'widget'     => array(
+                'type' => 'text_textfield'
+            ),
+        ), 
+
+        'product_quantity' => array(
+            'field_name' => 'product_quantity',
+            'label'      => $t('Product Quantity'),
+            'required'   => true,
+            'widget'     => array(
+                'type' => 'text_textfield'
+            ),
+        ),
+        'product_brand' => array(
+            'field_name' => 'product_brand',
+            'label'      => $t('Product Brand'),
+            'required'   => true,
+            'widget'     => array(
+                'type' => 'text_textfield'
+            ),
+        ),
+    );
+//here we define every isntance as type 'node'
+    foreach ($instances as $instance){
+        $instance['entity_type'] = 'node';
+        $instance['bundle']      = 'bundle'; 
+    }
+}
+
+/**
+*   Implements content_type uninstall
+*/
+
+function product_uninstall(){
+    //Remove all created content
+    $query = "SELECT nid FROM {node} WHERE {node}.type = :type ";
+    $content_ids = db_query($query, array(':type' => 'product'));
+
+    $nids = array();
+
+    foreach($content_ids as $row){
+        $nids[] = $row->nid;
+    }
+    //delete all nodes
+    node_delete_multiple($nids);
+    foreach( field_info_instances('node','product') as $instance){
+        field_delete_instance($instance);
+    }
+    //delete the content type
+    node_type_delete('product');
+    field_purge_batch(1000);
+}

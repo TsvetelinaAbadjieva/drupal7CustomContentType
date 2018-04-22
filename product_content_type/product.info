@@ -1,0 +1,7 @@
+name = Product
+description = Creates a custom Product content type
+version = 1.0
+core = 7.x
+ 
+files[] = product.install
+files[] = product.module
