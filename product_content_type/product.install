@@ -6,115 +6,156 @@
 
 function product_install(){
 
-//make t-function available
-    $t = get_t();
+  //make t-function available
+  $t = get_t();
 
-//define the content type   
-    
-    $content_type = array(
-        'type'              => 'product',
-        'name'              => $t('Product'),
-        'title_label'       => $t('Product title'),
-        'description'       => $t('Product description'),
-        'base'              => 'node_content',
-        'custom'            => true,
-    );
+  //define the content type  as a node stucture
 
-//create and save node_type as default node
+  $content_type = array(
+    'type'              => 'product',
+    'name'              => $t('Product'),
+    'has_title'         => true,
+    'title_label'       => $t('Product title'),
+    'description'       => $t('Product description'),
+    'base'              => 'node_content',
+    'custom'            => true,
+  );
 
-    $node_type = node_type_set_defaults($content_type);
-    node_type_save($node_type);
+  //create and save node_type as default node
 
-//create fields pattern for the content_type and loop for create the all fields one by one
-    $fields = array(
+  $node_type = node_type_set_defaults($content_type);
+  node_type_save($node_type);
 
-        'product_name'=> array(
-            'field_product_name'        => 'product_name',
-            'type'                      => 'text',
-            'cardinality'               => 1
-            ),
+  //create fields pattern for the content_type and loop for create the all fields one by one
+  $fields = array(
 
-        'product_description' =>array(
-            'field_product_description' => 'product_description',
-            'type'                      => 'text_long',
-            'cardinality'               => 1
-            ),
+    'product_title'=> array(
+      'field_name'        => 'product_title',
+      'type'              => 'text',
+      'label'             => $t('Product title'),
+      'cardinality'       => 1
+    ),
 
-        'product_price' => array(
-            'field_product_price'       => 'product_price',
-            'type'                      => 'float',
-            'cardinality'               => 1
-            ),
+    'product_description' =>array(
+      'field_name'        => 'product_description',
+      'type'              => 'text_long',
+      'label'             => $t('Product description'),
+      'cardinality'       => 1
+    ),
 
-        'product_quantity' => array(
-            'field_product_price'       => 'product_quantity',
-            'type'                      => 'float',
-            'cardinality'               => 1
-            ),
+    'product_price' => array(
+      'field_name'        => 'product_price',
+      'type'              => 'text',
+      'label'             => $t('Product price'),
+      'cardinality'       => 1
+    ),
 
-        'product_brand' => array(
-            'field_product_brand'       => 'product_brand',
-            'type'                      => 'text',
-            'cardinality'               => 1
-            ),
-    );
+    'product_quantity' => array(
+      'field_name'        => 'product_quantity',
+      'type'              => 'text',
+      'label'             => $t('Product quantity'),
+      'cardinality'       => 1
+    ),
 
-    foreach ($fields as $field){
-        field_create_field($field);
-    }
+    'product_brand' => array(
+      'field_name'        => 'product_brand',
+      'type'              => 'text',
+      'label'             => $t('Product brand'),
+      'cardinality'       => 1
+    ),
+  );
 
-//attach created fields to the content_type as instances  (in a way like form fields)
-    $instances = array(
+  foreach ($fields as $field){
+    field_create_field($field);
+  }
 
-        'product_name' => array(
-            'field_name' => 'product_name',
-            'label'      => $t('Product Name'),
-            'required'   => true,
-            'widget'     => array(
-                'type' => 'text_textfield'
-            ),
-        ), 
+  //attach created fields to the content_type as instances  (in a way like form fields)
+  $instances = array(
 
-        'product_description' => array(
-            'field_name' => 'product_description',
-            'label'      => $t('Product Description'),
-            'required'   => true,
-            'widget'     => array(
-                'type' => 'text_texarea'
-            ),
-        ), 
-
-        'product_price' => array(
-            'field_name' => 'product_price',
-            'label'      => $t('Product Price'),
-            'required'   => true,
-            'widget'     => array(
-                'type' => 'text_textfield'
-            ),
-        ), 
-
-        'product_quantity' => array(
-            'field_name' => 'product_quantity',
-            'label'      => $t('Product Quantity'),
-            'required'   => true,
-            'widget'     => array(
-                'type' => 'text_textfield'
-            ),
+    'product_title' => array(
+      'field_name' => 'product_title',
+      'label'      => $t('Product Title'),
+      'required'   => true,
+      'widget'     => array(
+        'type' => 'text_textfield'
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => $t('Product Title'),
+          'type' => 'text'
         ),
-        'product_brand' => array(
-            'field_name' => 'product_brand',
-            'label'      => $t('Product Brand'),
-            'required'   => true,
-            'widget'     => array(
-                'type' => 'text_textfield'
-            ),
+      ),
+    ),
+
+    'product_description' => array(
+      'field_name' => 'product_description',
+      'label'      => $t('Product Description'),
+      'required'   => true,
+      'widget'     => array(
+        'type' => 'text_textarea_with_summary'
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => $t('Product Description'),
+          'type' => 'text'
         ),
-    );
-//here we define every isntance as type 'node'
-    foreach ($instances as $instance){
-        $instance['entity_type'] = 'node';
-        $instance['bundle']      = 'bundle'; 
-    }
+      ),
+
+    ),
+
+    'product_price' => array(
+      'field_name' => 'product_price',
+      'label'      => $t('Product Price'),
+      'required'   => true,
+      'widget'     => array(
+        'type' => 'text_textfield'
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => $t('Product Price'),
+          'type' => 'text'
+        ),
+      ),
+
+    ),
+
+    'product_quantity' => array(
+      'field_name' => 'product_quantity',
+      'label'      => $t('Product Quantity'),
+      'required'   => true,
+      'widget'     => array(
+        'type' => 'text_textfield'
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => $t('Product Quantity'),
+          'type' => 'text'
+        ),
+      ),
+
+    ),
+    'product_brand' => array(
+      'field_name' => 'product_brand',
+      'label'      => $t('Product Brand'),
+      'required'   => true,
+      'widget'     => array(
+        'type' => 'text_textfield'
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => $t('Product Brand'),
+          'type' => 'text'
+        ),
+      ),
+    ),
+  );
+  //here we define every instance as type 'node'
+  print_r($instances);
+  foreach ($instances as $instance){
+    $instance['entity_type'] = 'node';
+    $instance['bundle']      = 'bundle';
+    field_create_instance($instance);
+  }
 }
 
 /**
@@ -122,21 +163,21 @@ function product_install(){
 */
 
 function product_uninstall(){
-    //Remove all created content
-    $query = "SELECT nid FROM {node} WHERE {node}.type = :type ";
-    $content_ids = db_query($query, array(':type' => 'product'));
+  //Remove all created content
+  $query = "SELECT nid FROM {node} WHERE {node}.type = :type ";
+  $content_ids = db_query($query, array(':type' => 'product'));
 
-    $nids = array();
+  $nids = array();
 
-    foreach($content_ids as $row){
-        $nids[] = $row->nid;
-    }
-    //delete all nodes
-    node_delete_multiple($nids);
-    foreach( field_info_instances('node','product') as $instance){
-        field_delete_instance($instance);
-    }
-    //delete the content type
-    node_type_delete('product');
-    field_purge_batch(1000);
+  foreach($content_ids as $row){
+    $nids[] = $row->nid;
+  }
+  //delete all nodes
+  node_delete_multiple($nids);
+  foreach( field_info_instances('node','product') as $instance){
+    field_delete_instance($instance);
+  }
+  //delete the content type
+  node_type_delete('product');
+  field_purge_batch(1000);
 }
