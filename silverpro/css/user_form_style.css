@@ -1,0 +1,14 @@
+/* #user-login-form label, #user-login-form input, #user-login-form .form-item, #edit-name, #edit-pass { display : inline; }
+#block-user-0 h2, #user-login-form .item-list { display : none; }
+#user-login-form { text-align : right; }
+#user-login-form input { font-size : 0.9em; }
+#user-login-form .form-text { width:120px; }   /* sets the field widths */
+/*.form-submit, #edit-submit {      /* puts the login button right under the password field */
+  /* margin-top:0; */
+/* }  */
+.form-item { */
+  background-color: grey;
+}
+.form-login {
+  background-color: lightblue;
+}

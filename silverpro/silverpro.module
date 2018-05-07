@@ -1,0 +1,43 @@
+<?php
+
+/**
+* Implements hook_menu().
+*/
+function silverpro_menu() {
+ $items['users/autocomplete/%'] = array(
+   'page callback'=>'silverpro_users_data',
+   'page arguments'=> array(2),
+   'access arguments' => array('administer site configuration'),
+   'type'=> MENU_CALLBACK,
+ );
+ return $items;
+}
+
+
+/**
+* AJAX (AHAH) callback for [OUR MODULE] extra info request.
+* It receives NID parameter from URL.
+*/
+function silverpro_users_data($nid) {
+ if (!is_numeric($nid)) {
+   return;
+ }
+ $node = node_load($nid);
+ $output = theme('silverpro_users_extra_info', array('node' => $node));
+ return drupal_json_output($output);
+}
+
+/**
+* Implements hook_theme().
+*/
+function silverpro_theme($existing, $type, $theme, $path) {
+ $themes = array();
+ $themes['silverpro_users_extra_info'] = array(
+   'variables' => array('node' => NULL),
+   'preprocess functions' => array(
+    'silverpro_preprocess_users_extra_info',
+   ),
+   'template' => 'templates/silverpro--users-info'
+ );
+ return $themes;
+}
