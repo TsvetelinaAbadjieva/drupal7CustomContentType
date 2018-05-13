@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="myFunction()" type="button">Get video length</button><br>
+
+
+<iframe id="videoPlayer"
+  width="640"
+  height="360"
+  src = "https://bcove.video/2ryCVsU?enablejsapi=1"
+  frameborder="0"
+  autoplay = "0"
+  controls = "1"
+  allow="autoplay; encrypted-media"
+  allowfullscreen = 1>
+</iframe>
+<script>
+// src = "https://bcove.video/2ryCVsU?enablejsapi=1"
+
+ // scr="https://players.brightcove.net/5783296993001/default_default/index.html?videoId=5783581070001?enablejsapi=1"
+
+// src="https://www.youtube.com/embed/biKxw5iEzsY?enablejsapi=1"
+// 2. This code loads the IFrame Player API code asynchronously.
+var count = 0;
+var tag = document.createElement('script');
+tag.src = "https://players.brightcove.net/iframe_api";
+// tag.src = "https://www.youtube.com/iframe_api";
+
+tag.id = count++;
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.id = firstScriptTag.id+"_"+count;
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var player = {};
+var started = true;
+var stateStatus = 'unstarted';
+var videoPlayer = document.getElementById("videoPlayer");
+
+// videoPlayer.addEventListener('click', function(){
+//   started = !started;
+//   alert(started);
+// });
+function changeState(){
+  started = !started;
+  alert(started);
+}
+function onYouTubeIframeAPIReady() {
+  console.log('In');
+  player = new YT.Player('videoPlayer', {
+    height: '390',
+    width: '640',
+    videoId: '5783581070001',
+    playerVars: { 'autoplay': 0, 'controls': 1 },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+  console.log(player);
+}
+function onPlayerReady(event){
+  console.log(started);
+  console.log(player.getDuration());
+
+  if(!started){
+    event.target.playVideo();
+  }
+}
+function stopVideo(event) {
+    event.target.stopVideo();
+      console.log(player.getDuration());
+}
+
+function onPlayerStateChange(){
+  status = player.getPlayerState();
+  switch (status) {
+    case '-1': stateStatus = 'unstarted'; break;
+    case  '0': stateStatus = 'ended'; break;
+    case  '1': stateStatus = 'playing'; break;
+    case  '2': stateStatus = 'paused'; break;
+  }
+  console.log(stateStatus);
+}
+ function myFunction(){
+   alert(stateStatus);
+ }
+</script>
+
+</body>
+</html>

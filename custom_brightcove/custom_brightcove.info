@@ -1,0 +1,5 @@
+name = Custom Brightcove Video
+description = Creates a custom Brightcove format field
+version = 1.0
+core = 7.x
+files[] = custom_brightcove.module

@@ -1,0 +1,54 @@
+<?php
+/**
+* Implements hook_field_formatter_info
+*/
+function custom_brightcove_field_formatter_info(){
+ return array(
+   'brightcove_video_formatter' => array(
+     'label' => t('Video Id'),
+     'field types' => array(
+       'text',
+        'text_long',
+        'text_with_summary',
+     ),
+   ),
+ );
+}
+
+/**
+* This function implements the iframe with embeded source  returned
+*/
+function brightcove_embeded_formatter($video_id){
+ $iframe = '
+ <iframe id="videoPlayer"
+   width="640"
+   height="360"
+   src = "https://bcove.video/'.$video_id.'?enablejsapi=1"
+   frameborder="0"
+   autoplay = "0"
+   controls = "1"
+   allow="autoplay; encrypted-media"
+   allowfullscreen = 1>
+ </iframe>
+ ';
+ return $iframe;
+}
+
+<video src="https://player.vimeo.com/external/258241123.hd.mp4?s=ef12e694c8758814e768acaaf1ccf4ac5593d375&amp;profile_id=175" webkit-playsinline="" playsinline="" preload="metadata" class="h5p-video" style="display: block;"></video>
+/**
+* Implements hook_field_formatter_view
+*/
+function custom_brightcove_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display){
+dsm($entity);
+  $settings = $display['settings'];
+  $element = array();
+
+  if($dispaly['type'] == 'brightcove_video_formatter') {
+    foreach($items as $delta => $item){
+      $element[$delta] = array(
+        '#markup' => brightcove_embeded_formatter($item['vaalue']),
+      );
+    }
+  }
+  return $element;
+}
